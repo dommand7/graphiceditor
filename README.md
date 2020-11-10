@@ -5,14 +5,21 @@
 
 This graphical editor understands 7 commands:
 I M N... creates MxN table and sets all elements to 'O'
+
 L X Y C... colours the pixel (X,Y) with colour C
+
 C... clears the table
+
 V X Y1 Y2 C... draws a vertical segment of colour C in column X between rows Y1 and Y2
+
 H X1 X2 Y C... draws a horizontal segment of colour C in row Y between columns X1 and X2
+
 F X Y C... fills the region R with the colour C.R is defined as: pixel (X,Y) belongs to R.Any other
 pixel which is the same colour as (X,Y) and shares a common side with any pixel in R also belongs
 to this region
+
 S... shows the table
+
 X... terminates the session
 
 
