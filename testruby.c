@@ -1,24 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
-int i, M, N, x, y, j, z, var, red, st1, st2, st, red1, red2, l, d;
-char c = 'A', b, pamti, boja;
-char **tablica;
-void regija(int x, int y, char boja, char pamti)
+#include <stdbool.h>
+int M, N;
+char **matrix;
+bool isPixelValid(int x, int y)
 {
-    if (tablica[x][y] == boja)
+    if (x < 0 || x > N - 1 || y < 0 || y > M - 1)
+        return false;
+    else
+        return true;
+}
+char getPixelColor(int x, int y)
+{
+    if (isPixelValid(x, y) == true)
+        return matrix[x][y];
+}
+char setPixelColor(int x, int y, char color)
+{
+    if (isPixelValid(x, y) == true)
+    {
+        matrix[x][y] = color;
+        return color;
+    }
+    else
+        return '\0';
+}
+void region(int x, int y, char b, char remember)
+{
+    if (isPixelValid(x, y) == false)
         return;
-    tablica[x][y] = boja;
-    if ((x - 1) >= 0 && (x - 1) < N && y >= 0 && y < M && (tablica[x - 1][y] == pamti))
-        regija(x - 1, y, boja, pamti);
-    if ((x + 1) >= 0 && (x + 1) < N && y >= 0 && y < M && (tablica[x + 1][y] == pamti))
-        regija(x + 1, y, boja, pamti);
-    if (x >= 0 && x < N && (y - 1) >= 0 && (y - 1) < M && (tablica[x][y - 1] == pamti))
-        regija(x, y - 1, boja, pamti);
-    if (x >= 0 && x < N && (y + 1) >= 0 && (y + 1) < M && (tablica[x][y + 1] == pamti))
-        regija(x, y + 1, boja, pamti);
+    if (getPixelColor(x, y) == b)
+        return;
+    setPixelColor(x, y, b);
+    if (getPixelColor(x - 1, y) == remember)
+        region(x - 1, y, b, remember);
+    if (getPixelColor(x + 1, y) == remember)
+        region(x + 1, y, b, remember);
+    if (getPixelColor(x, y - 1) == remember)
+        region(x, y - 1, b, remember);
+    if (getPixelColor(x, y + 1) == remember)
+        region(x, y + 1, b, remember);
 }
 int main()
 {
+    int i, j, x, y, z;
+    char c = 'A', b, remember;
     while (c != 'X')
     {
         scanf("%c", &c);
@@ -29,17 +55,17 @@ int main()
             scanf("%d %d", &M, &N);
             if (N > 250 || M > 250)
                 printf("N i M moraju biti manji ili jednaki 250");
-            tablica = (char **)malloc(N * sizeof(char *));
+            matrix = (char **)malloc(N * sizeof(char *));
             for (i = 0; i < N; i++)
             {
-                tablica[i] = (char *)malloc(M * sizeof(char));
+                matrix[i] = (char *)malloc(M * sizeof(char));
             }
             printf("uspilo\n");
             for (i = 0; i < N; i++)
             {
                 for (j = 0; j < M; j++)
                 {
-                    tablica[i][j] = 'O';
+                    setPixelColor(i, j, 'O');
                 }
             }
         }
@@ -50,7 +76,7 @@ int main()
             for (i = 0; i < N; i++)
             {
                 for (j = 0; j < M; j++)
-                    tablica[i][j] = 'O';
+                    setPixelColor(i, j, 'O');
             }
         }
         break;
@@ -59,35 +85,35 @@ int main()
         {
             scanf("%d %d %c", &x, &y, &b);
             printf("obojat ce piksel %d,%d bojom %c \n", x, y, b);
-            tablica[y - 1][x - 1] = b;
+            setPixelColor(y - 1, x - 1, b);
         }
         break;
 
         case 'V':
         {
-            scanf("%d %d %d %c", &red, &st1, &st2, &b);
-            for (i = st1 - 1; i <= st2 - 1; i++)
+            scanf("%d %d %d %c", &x, &y, &z, &b);
+            for (i = y - 1; i <= z - 1; i++)
             {
-                tablica[i][red - 1] = b;
+                setPixelColor(i, x - 1, b);
             }
         }
         break;
 
         case 'H':
         {
-            scanf("%d %d %d %c", &red1, &red2, &st, &b);
-            for (i = red1 - 1; i <= red2 - 1; i++)
+            scanf("%d %d %d %c", &x, &y, &z, &b);
+            for (i = x - 1; i <= y - 1; i++)
             {
-                tablica[st - 1][i] = b;
+                setPixelColor(z - 1, i, b);
             }
         }
         break;
 
         case 'F':
         {
-            scanf("%d %d %c", &l, &d, &boja);
-            pamti = tablica[d - 1][l - 1];
-            regija(d - 1, l - 1, boja, pamti);
+            scanf("%d %d %c", &x, &y, &b);
+            remember = getPixelColor(y - 1, x - 1);
+            region(y - 1, x - 1, b, remember);
         }
         break;
         case 'S':
@@ -96,7 +122,7 @@ int main()
             {
                 for (j = 0; j < M; j++)
                 {
-                    printf("%c", tablica[i][j]);
+                    printf("%c", getPixelColor(i, j));
                 }
                 printf("\n");
             }
@@ -108,6 +134,6 @@ int main()
         }
     }
     for (i = 0; i < N; i++)
-        free(tablica[i]);
-    free(tablica);
+        free(matrix[i]);
+    free(matrix);
 }
