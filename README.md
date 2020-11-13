@@ -27,13 +27,19 @@ X... terminates the session
 
 How to compile:
 open terminal by pressing Win+R,type "cmd" and press Enter
+
 type cd <directoryname> in terminal to change the current working directory to where you want to work
+
 type git clone https://github.com/dommand7/graphiceditor.git 
-type dir if you want to list files in current directory 
+
+type dir if you want to list files in current directory, 
 then type cd graphiceditor to change directory where the program is
+
 type gcc testruby.c to compile source code and create an executable file 
-by gcc -o <name> testruby.c we name our executable file 
+
+by gcc -o <name> testruby.c we name our executable file ,
 and then run it by typing <name> and pressing enter
+
 input are commands given above in "Getting Started" section
 
 # Code explanation
