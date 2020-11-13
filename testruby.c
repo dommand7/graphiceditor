@@ -14,6 +14,7 @@ char getPixelColor(int x, int y)
 {
     if (isPixelValid(x, y) == true)
         return matrix[x][y];
+        else return '\0';
 }
 char setPixelColor(int x, int y, char color)
 {
