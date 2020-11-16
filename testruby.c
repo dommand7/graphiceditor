@@ -7,45 +7,42 @@ bool isPixelValid(int x, int y)
 {
     if (x < 0 || x > N - 1 || y < 0 || y > M - 1)
         return false;
-    else
-        return true;
+    return true;
 }
 char getPixelColor(int x, int y)
 {
-    if (isPixelValid(x, y) == true)
+    if (isPixelValid(x, y))
         return matrix[x][y];
-        else return '\0';
+    return false;
 }
 char setPixelColor(int x, int y, char color)
 {
-    if (isPixelValid(x, y) == true)
+    if (!isPixelValid(x, y))
     {
-        matrix[x][y] = color;
-        return color;
+        return false;
     }
-    else
-        return '\0';
+    return matrix[x][y] = color;
 }
-void region(int x, int y, char b, char remember)
+void fillRegion(int x, int y, char color, char remember)
 {
-    if (isPixelValid(x, y) == false)
+    if (!isPixelValid(x, y))
         return;
-    if (getPixelColor(x, y) == b)
+    if (getPixelColor(x, y) == color)
         return;
-    setPixelColor(x, y, b);
+    setPixelColor(x, y, color);
     if (getPixelColor(x - 1, y) == remember)
-        region(x - 1, y, b, remember);
+        fillRegion(x - 1, y, color, remember);
     if (getPixelColor(x + 1, y) == remember)
-        region(x + 1, y, b, remember);
+        fillRegion(x + 1, y, color, remember);
     if (getPixelColor(x, y - 1) == remember)
-        region(x, y - 1, b, remember);
+        fillRegion(x, y - 1, color, remember);
     if (getPixelColor(x, y + 1) == remember)
-        region(x, y + 1, b, remember);
+        fillRegion(x, y + 1, color, remember);
 }
 int main()
 {
     int i, j, x, y, z;
-    char c = 'A', b, remember;
+    char c = '\0', color, remember;
     while (c != 'X')
     {
         scanf("%c", &c);
@@ -55,13 +52,12 @@ int main()
         {
             scanf("%d %d", &M, &N);
             if (N > 250 || M > 250)
-                printf("N i M moraju biti manji ili jednaki 250");
+                printf("N and M are dimensions and have to be between 1 and 250");
             matrix = (char **)malloc(N * sizeof(char *));
             for (i = 0; i < N; i++)
             {
                 matrix[i] = (char *)malloc(M * sizeof(char));
             }
-            printf("uspilo\n");
             for (i = 0; i < N; i++)
             {
                 for (j = 0; j < M; j++)
@@ -84,37 +80,36 @@ int main()
 
         case 'L':
         {
-            scanf("%d %d %c", &x, &y, &b);
-            printf("obojat ce piksel %d,%d bojom %c \n", x, y, b);
-            setPixelColor(y - 1, x - 1, b);
+            scanf("%d %d %c", &x, &y, &color);
+            setPixelColor(y - 1, x - 1, color);
         }
         break;
 
         case 'V':
         {
-            scanf("%d %d %d %c", &x, &y, &z, &b);
+            scanf("%d %d %d %c", &x, &y, &z, &color);
             for (i = y - 1; i <= z - 1; i++)
             {
-                setPixelColor(i, x - 1, b);
+                setPixelColor(i, x - 1, color);
             }
         }
         break;
 
         case 'H':
         {
-            scanf("%d %d %d %c", &x, &y, &z, &b);
+            scanf("%d %d %d %c", &x, &y, &z, &color);
             for (i = x - 1; i <= y - 1; i++)
             {
-                setPixelColor(z - 1, i, b);
+                setPixelColor(z - 1, i, color);
             }
         }
         break;
 
         case 'F':
         {
-            scanf("%d %d %c", &x, &y, &b);
+            scanf("%d %d %c", &x, &y, &color);
             remember = getPixelColor(y - 1, x - 1);
-            region(y - 1, x - 1, b, remember);
+            fillRegion(y - 1, x - 1, color, remember);
         }
         break;
         case 'S':
